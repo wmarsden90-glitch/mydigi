@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Booking Confirmation — TARTAN MODELS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--font-ui:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--font-brand:'DM Sans',-apple-system,sans-serif;--font-luxury:'Cormorant Garamond','Georgia',serif;--max-w:1100px;--radius:6px;--radius-lg:10px;--ease:cubic-bezier(.4,0,.2,1);--tr:220ms var(--ease)}
+[data-theme="light"]{--bg:#FAFAFA;--bg-card:#FFF;--bg-elevated:#F5F5F5;--bg-input:#FFF;--bg-hover:#F0F0F0;--border:#E5E5E5;--border-focus:#1A1A1A;--text-primary:#1A1A1A;--text-secondary:#6B6B6B;--text-tertiary:#999;--text-inverse:#FFF;--accent:#1A1A1A;--accent-soft:rgba(26,26,26,.06);--shadow-md:0 4px 16px rgba(0,0,0,.06);--shadow-lg:0 8px 32px rgba(0,0,0,.08);--toggle-bg:#D4D4D4;--toggle-knob:#FFF;--scrollbar:#D4D4D4;--modal-bg:rgba(250,250,250,.94);--danger:#C44;--danger-soft:rgba(204,68,68,.08)}
+[data-theme="dark"]{--bg:#0C0C0C;--bg-card:#161616;--bg-elevated:#1E1E1E;--bg-input:#1A1A1A;--bg-hover:#252525;--border:#282828;--border-focus:#FFF;--text-primary:#EDEDED;--text-secondary:#8A8A8A;--text-tertiary:#5A5A5A;--text-inverse:#0C0C0C;--accent:#EDEDED;--accent-soft:rgba(237,237,237,.06);--shadow-md:0 4px 16px rgba(0,0,0,.4);--shadow-lg:0 8px 32px rgba(0,0,0,.5);--toggle-bg:#404040;--toggle-knob:#EDEDED;--scrollbar:#404040;--modal-bg:rgba(12,12,12,.95);--danger:#E66;--danger-soft:rgba(230,102,102,.1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--text-primary);line-height:1.5;min-height:100vh;transition:background .3s var(--ease),color .3s var(--ease)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:3px}
+input,textarea,select,button{font-family:inherit;font-size:inherit}img{display:block}
+.shell{max-width:var(--max-w);margin:0 auto;padding:0 48px 100px}
+.hdr{display:flex;align-items:center;justify-content:center;padding:28px 48px 24px;position:relative;user-select:none}
+.brand-text{font-family:var(--font-brand);font-size:20px;font-weight:600;letter-spacing:.48em;text-transform:uppercase;color:var(--text-primary);text-align:center}
+.hdr-sub{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-tertiary);margin-top:5px;text-align:center}
+.hdr-r{position:absolute;right:48px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:10px}
+.theme-tog{display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 14px;border-radius:20px;background:var(--bg-elevated);border:1px solid var(--border);transition:all var(--tr);font-size:11px;color:var(--text-secondary);letter-spacing:.05em}.theme-tog:hover{background:var(--bg-hover)}
+.tog-track{width:30px;height:16px;background:var(--toggle-bg);border-radius:8px;position:relative;transition:background var(--tr)}
+.tog-knob{width:12px;height:12px;background:var(--toggle-knob);border-radius:50%;position:absolute;top:2px;left:2px;transition:transform var(--tr);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+[data-theme="dark"] .tog-knob{transform:translateX(14px)}
+.divider{height:1px;background:var(--border);margin:0 0 36px}
+.panel{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px 32px;margin-bottom:20px;transition:border-color var(--tr)}.panel:hover{border-color:var(--text-tertiary)}
+.panel-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:20px;display:flex;align-items:center;gap:10px}.panel-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.panel-row{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 24px;margin-bottom:16px}.panel-row:last-child{margin-bottom:0}
+.panel-row.c3{grid-template-columns:repeat(3,1fr)}.panel-row.c4{grid-template-columns:repeat(4,1fr)}.panel-row.c1{grid-template-columns:1fr}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fl{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary)}
+.fi{padding:9px 13px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-input);color:var(--text-primary);font-size:13.5px;transition:all var(--tr);outline:none}
+.fi:focus{border-color:var(--border-focus);box-shadow:0 0 0 1px var(--border-focus)}.fi::placeholder{color:var(--text-tertiary)}
+select.fi{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+textarea.fi{resize:vertical;min-height:68px;line-height:1.5}
+.model-entry{background:var(--bg-elevated);border-radius:var(--radius);padding:16px 20px;margin-bottom:12px;position:relative;border:1px solid transparent;transition:border-color var(--tr)}.model-entry:hover{border-color:var(--border)}.model-entry .panel-row{margin-bottom:12px}
+.model-num{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:10px}
+.rm-model{position:absolute;top:12px;right:14px;width:26px;height:26px;border-radius:50%;background:var(--danger-soft);color:var(--danger);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all var(--tr);opacity:.6}.rm-model:hover{opacity:1;background:var(--danger);color:#fff}
+.add-model-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;letter-spacing:.04em;color:var(--text-secondary);background:none;border:1px dashed var(--border);border-radius:var(--radius);padding:10px 20px;cursor:pointer;transition:all var(--tr);text-transform:uppercase}.add-model-btn:hover{border-color:var(--text-tertiary);color:var(--text-primary);background:var(--bg-hover)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;font-size:12px;font-weight:500;letter-spacing:.06em;border:none;border-radius:var(--radius);cursor:pointer;transition:all var(--tr);text-transform:uppercase;white-space:nowrap}
+.btn-p{background:var(--accent);color:var(--text-inverse)}.btn-p:hover{opacity:.85}
+.btn-s{background:transparent;color:var(--text-secondary);border:1px solid var(--border)}.btn-s:hover{background:var(--bg-hover);border-color:var(--text-tertiary)}
+.dl-bar{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:36px;flex-wrap:wrap;padding:28px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg)}
+.dl-bar-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-tertiary);width:100%;text-align:center;margin-bottom:8px}
+.ref-badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--text-secondary);background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;padding:6px 16px;letter-spacing:.04em;margin-bottom:24px}.ref-badge strong{color:var(--text-primary);font-weight:600;letter-spacing:.06em}
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(120%);background:var(--accent);color:var(--text-inverse);padding:12px 28px;border-radius:var(--radius);font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);z-index:2000;transition:transform .3s var(--ease);pointer-events:none}.toast.vis{transform:translateX(-50%) translateY(0)}
+.ld-ov{position:fixed;inset:0;z-index:1500;background:var(--modal-bg);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px}.ld-ov.open{display:flex}
+.ld-sp{width:24px;height:24px;border:2.5px solid transparent;border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.ld-tx{font-size:13px;color:var(--text-secondary);letter-spacing:.04em}
+.render-stage{position:absolute;left:-9999px;top:0;pointer-events:none}
+.terms-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.terms-chip{font-size:11px;padding:5px 12px;border:1px solid var(--border);border-radius:14px;background:transparent;color:var(--text-secondary);cursor:pointer;transition:all var(--tr)}.terms-chip:hover{background:var(--bg-hover);border-color:var(--text-tertiary)}.terms-chip.active{background:var(--accent);color:var(--text-inverse);border-color:var(--accent)}
+@media print{body{background:#fff!important}.hdr,.hdr-r,.theme-tog,.toast,.ld-ov,.dl-bar,.divider{display:none!important}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div style="text-align:center">
+    <div class="brand-text">TARTAN</div>
+    <div class="hdr-sub">Booking Confirmation System</div>
+  </div>
+  <div class="hdr-r">
+    <div class="theme-tog" onclick="toggleTheme()" role="button" tabindex="0">
+      <span id="tLbl">Dark</span>
+      <div class="tog-track"><div class="tog-knob"></div></div>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+<div class="divider"></div>
+<div class="ref-badge">Booking Ref: <strong id="bookRef">—</strong></div>
+
+<!-- BOOKING DETAILS -->
+<div class="panel">
+  <div class="panel-title">Booking Details</div>
+  <div class="panel-row c3">
+    <div class="fg"><label class="fl">Booking Date *</label><input type="date" class="fi" id="bDate"></div>
+    <div class="fg"><label class="fl">PO Number</label><input type="text" class="fi" id="bPO" placeholder="e.g. PO-2024-0891"></div>
+    <div class="fg"><label class="fl">Invoice Number</label><input type="text" class="fi" id="bInv" placeholder="e.g. INV-0421"></div>
+  </div>
+  <div class="panel-row c3">
+    <div class="fg"><label class="fl">Job Type *</label>
+      <select class="fi" id="bType"><option value="">Select…</option><option>Editorial</option><option>Commercial</option><option>E-Commerce</option><option>Campaign</option><option>Lookbook</option><option>TVC</option><option>Runway</option><option>Fitting</option><option>Showroom</option><option>PR Event</option><option>Catalogue</option><option>Content Creation</option><option>Other</option></select>
+    </div>
+    <div class="fg"><label class="fl">Usage *</label>
+      <select class="fi" id="bUsage"><option value="">Select…</option><option>Print Only</option><option>Digital Only</option><option>Social Media Only</option><option>Print + Digital</option><option>All Media</option><option>OOH (Out of Home)</option><option>TV / Broadcast</option><option>Point of Sale</option><option>Internal Use Only</option><option>Buyout — All Media</option><option>TBC</option></select>
+    </div>
+    <div class="fg"><label class="fl">Usage Territory *</label>
+      <select class="fi" id="bTerritory"><option value="">Select…</option><option>UK Only</option><option>UK + Europe</option><option>Europe</option><option>North America</option><option>Worldwide</option><option>Worldwide Excluding USA</option><option>Digital Worldwide</option><option>TBC</option></select>
+    </div>
+  </div>
+  <div class="panel-row c3">
+    <div class="fg"><label class="fl">Usage Duration *</label>
+      <select class="fi" id="bDuration"><option value="">Select…</option><option>3 Months</option><option>6 Months</option><option>1 Year</option><option>2 Years</option><option>3 Years</option><option>5 Years</option><option>In Perpetuity</option><option>Duration of Campaign</option><option>TBC</option></select>
+    </div>
+    <div class="fg"><label class="fl">Payment Terms *</label>
+      <select class="fi" id="bPayTerms"><option value="">Select…</option><option>On Completion</option><option>Net 14</option><option>Net 30</option><option>Net 60</option><option>Net 90</option><option>50% Upfront / 50% Completion</option><option>On Invoice</option></select>
+    </div>
+    <div class="fg"><label class="fl">Currency</label>
+      <select class="fi" id="bCurrency"><option value="£">GBP (£)</option><option value="€">EUR (€)</option><option value="$">USD ($)</option></select>
+    </div>
+  </div>
+</div>
+
+<!-- JOB SCHEDULE -->
+<div class="panel">
+  <div class="panel-title">Job Schedule</div>
+  <div class="panel-row c4">
+    <div class="fg"><label class="fl">Job Date *</label><input type="date" class="fi" id="jDate"></div>
+    <div class="fg"><label class="fl">Call Time *</label><input type="time" class="fi" id="jCall"></div>
+    <div class="fg"><label class="fl">Start Time</label><input type="time" class="fi" id="jStart"></div>
+    <div class="fg"><label class="fl">Estimated Wrap</label><input type="time" class="fi" id="jWrap"></div>
+  </div>
+  <div class="panel-row">
+    <div class="fg"><label class="fl">Additional Dates</label><input type="text" class="fi" id="jExtraDates" placeholder="e.g. 15 Mar, 16 Mar (if multi-day)"></div>
+    <div class="fg"><label class="fl">Overtime Rate</label>
+      <select class="fi" id="jOT"><option value="">N/A</option><option>Standard (time and a half)</option><option>Double Time</option><option>Flat Rate — No OT</option><option>To Be Agreed</option></select>
+    </div>
+  </div>
+</div>
+
+<!-- LOCATION -->
+<div class="panel">
+  <div class="panel-title">Location</div>
+  <div class="panel-row">
+    <div class="fg"><label class="fl">Venue / Studio Name *</label><input type="text" class="fi" id="lVenue" placeholder="e.g. Daylight Studios"></div>
+    <div class="fg"><label class="fl">Address *</label><input type="text" class="fi" id="lAddr" placeholder="Full address including postcode"></div>
+  </div>
+  <div class="panel-row">
+    <div class="fg"><label class="fl">Travel / Transport Notes</label><input type="text" class="fi" id="lTravel" placeholder="e.g. Parking available, nearest tube…"></div>
+    <div class="fg"><label class="fl">On-Set Contact</label><input type="text" class="fi" id="lContact" placeholder="Name + phone number"></div>
+  </div>
+</div>
+
+<!-- CLIENT -->
+<div class="panel">
+  <div class="panel-title">Client Details</div>
+  <div class="panel-row">
+    <div class="fg"><label class="fl">Client / Company Name *</label><input type="text" class="fi" id="cCompany" placeholder="e.g. ASOS"></div>
+    <div class="fg"><label class="fl">Brand (if different)</label><input type="text" class="fi" id="cBrand" placeholder="e.g. ASOS Design"></div>
+  </div>
+  <div class="panel-row c3">
+    <div class="fg"><label class="fl">Contact Name *</label><input type="text" class="fi" id="cName" placeholder="Full name"></div>
+    <div class="fg"><label class="fl">Email *</label><input type="email" class="fi" id="cEmail" placeholder="email@company.com"></div>
+    <div class="fg"><label class="fl">Phone</label><input type="tel" class="fi" id="cPhone" placeholder="+44…"></div>
+  </div>
+  <div class="panel-row c1">
+    <div class="fg"><label class="fl">Client Address</label><input type="text" class="fi" id="cAddr" placeholder="Full billing address"></div>
+  </div>
+</div>
+
+<!-- MODELS -->
+<div class="panel">
+  <div class="panel-title">Model(s)</div>
+  <div id="modelList"></div>
+  <button class="add-model-btn" onclick="addModel()">+ Add Model</button>
+</div>
+
+<!-- ADDITIONAL -->
+<div class="panel">
+  <div class="panel-title">Additional Information</div>
+  <div class="panel-row c1">
+    <div class="fg"><label class="fl">Special Requirements / Notes</label><textarea class="fi" id="xNotes" placeholder="Wardrobe notes, dietary requirements, specific requests…"></textarea></div>
+  </div>
+  <div class="panel-row c1">
+    <div class="fg"><label class="fl">Cancellation Terms</label>
+      <div class="terms-chips">
+        <button class="terms-chip" onclick="setCancel(this,'Full fee if cancelled within 48 hours of job date')">48hr Full Fee</button>
+        <button class="terms-chip" onclick="setCancel(this,'Full fee if cancelled within 24 hours of job date')">24hr Full Fee</button>
+        <button class="terms-chip" onclick="setCancel(this,'50% fee if cancelled within 72 hours, full fee within 24 hours')">72hr 50% / 24hr Full</button>
+        <button class="terms-chip" onclick="setCancel(this,'Weather permitting — no cancellation fee for weather-related cancellations')">Weather Clause</button>
+        <button class="terms-chip" onclick="setCancel(this,'')">Custom</button>
+      </div>
+      <textarea class="fi" id="xCancel" rows="2" placeholder="Cancellation terms…"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- DOWNLOAD BAR -->
+<div class="dl-bar">
+  <div class="dl-bar-label">Download Confirmations</div>
+  <button class="btn btn-p" onclick="dlClientPDF()">⤓ Client Confirmation — PDF</button>
+  <button class="btn btn-s" onclick="dlModelPDFs()">⤓ Model Confirmation(s) — PDF</button>
+</div>
+</div>
+
+<div class="ld-ov" id="ldO"><div class="ld-sp"></div><div class="ld-tx" id="ldT">Generating PDF…</div></div>
+<div class="toast" id="toast"></div>
+<div class="render-stage" id="stg"></div>
+
+<script>
+/* ═══ THEME ═══ */
+function toggleTheme(){const h=document.documentElement,n=h.getAttribute('data-theme')==='light'?'dark':'light';h.setAttribute('data-theme',n);document.getElementById('tLbl').textContent=n==='light'?'Dark':'Light'}
+
+/* ═══ BOOKING REF: YYYY-TM-XXXX ═══ */
+function genRef(){
+  const y=new Date().getFullYear();
+  let seq=2000;
+  try{const stored=parseInt(localStorage.getItem('tm_ref_seq')||'1999');seq=stored+1;}catch(e){seq=2000;}
+  try{localStorage.setItem('tm_ref_seq',String(seq));}catch(e){}
+  return`${y}-TM-${seq}`;
+}
+const bookingRef=genRef();
+document.getElementById('bookRef').textContent=bookingRef;
+document.getElementById('bDate').valueAsDate=new Date();
+
+/* ═══ MODELS ═══ */
+let modelCount=0;
+function addModel(){
+  modelCount++;const n=modelCount;
+  const d=document.createElement('div');d.className='model-entry';d.id='model-'+n;
+  d.innerHTML=`<div class="model-num">Model ${n}</div>
+    ${n>1?'<button class="rm-model" onclick="rmModel('+n+')" title="Remove">✕</button>':''}
+    <div class="panel-row c4">
+      <div class="fg"><label class="fl">Model Name *</label><input type="text" class="fi md-name" placeholder="Full name"></div>
+      <div class="fg"><label class="fl">Gender *</label>
+        <select class="fi md-gender"><option value="Female">Female</option><option value="Male">Male</option></select>
+      </div>
+      <div class="fg"><label class="fl">Day Rate *</label><input type="text" class="fi md-rate" placeholder="e.g. 500"></div>
+      <div class="fg"><label class="fl">Agency Fee %</label>
+        <select class="fi md-fee"><option value="20">20%</option><option value="22.5">22.5%</option><option value="25">25%</option><option value="0">N/A</option></select>
+      </div>
+    </div>
+    <div class="panel-row">
+      <div class="fg"><label class="fl">Travel / Expenses</label><input type="text" class="fi md-travel" placeholder="e.g. £50 travel allowance"></div>
+      <div class="fg"><label class="fl">Special Notes (Model)</label><input type="text" class="fi md-notes" placeholder="e.g. Bring portfolio, specific wardrobe…"></div>
+    </div>`;
+  document.getElementById('modelList').appendChild(d);
+}
+function rmModel(n){const el=document.getElementById('model-'+n);if(el)el.remove()}
+addModel();
+
+function setCancel(btn,text){document.querySelectorAll('.terms-chip').forEach(c=>c.classList.remove('active'));btn.classList.add('active');if(text)document.getElementById('xCancel').value=text;else document.getElementById('xCancel').value='';document.getElementById('xCancel').focus()}
+
+/* ═══ HELPERS ═══ */
+function $(id){return document.getElementById(id)}
+function gv(id){return $(id).value.trim()}
+function fmtDate(v){if(!v)return'—';const d=new Date(v+'T00:00:00');return d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}
+function fmtTime(v){if(!v)return'—';const[h,m]=v.split(':');const hr=parseInt(h);return`${hr>12?hr-12:hr||12}:${m} ${hr>=12?'PM':'AM'}`}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('vis');setTimeout(()=>t.classList.remove('vis'),2800)}
+function showLD(t){$('ldT').textContent=t||'Generating…';$('ldO').classList.add('open')}
+function hideLD(){$('ldO').classList.remove('open')}
+
+function getModels(){
+  return Array.from(document.querySelectorAll('.model-entry')).map(e=>({
+    name:e.querySelector('.md-name').value.trim(),
+    gender:e.querySelector('.md-gender').value,
+    rate:e.querySelector('.md-rate').value.trim(),
+    fee:e.querySelector('.md-fee').value,
+    travel:e.querySelector('.md-travel').value.trim(),
+    notes:e.querySelector('.md-notes').value.trim()
+  })).filter(m=>m.name);
+}
+
+function validate(){
+  for(const[id,label] of[['bDate','Booking date'],['bType','Job type'],['bUsage','Usage'],['bTerritory','Territory'],['bDuration','Duration'],['bPayTerms','Payment terms'],['jDate','Job date'],['jCall','Call time'],['lVenue','Venue'],['lAddr','Address'],['cCompany','Client company'],['cName','Client contact']]){if(!gv(id)){toast(`${label} is required`);return false}}
+  if(!getModels().length){toast('Add at least one model');return false}
+  return true;
+}
+
+function getCur(){return gv('bCurrency')||'£'}
+
+/* ═══ MODEL KIT LISTS ═══ */
+const KIT_FEMALE=[
+  'Nude seamless underwear (thong + strapless bra)',
+  'Black seamless underwear (thong + strapless bra)',
+  'Nude heels (minimum 3 inch)',
+  'Black heels',
+  'Clear heels (if available)',
+  'Plain black jeans / fitted trousers',
+  'Plain white t-shirt (fitted)',
+  'Plain black t-shirt (fitted)',
+  'Hair ties, kirby grips, brush',
+  'Personal makeup basics (concealer, mascara, lip balm)',
+  'Nail polish remover + clear polish',
+  'Deodorant + personal hygiene essentials',
+  'Phone charger',
+  'Portfolio / digitals (if requested)'
+];
+const KIT_MALE=[
+  'Plain black boxer briefs (seamless)',
+  'Plain white boxer briefs (seamless)',
+  'Plain white t-shirt (crew neck, fitted)',
+  'Plain black t-shirt (crew neck, fitted)',
+  'Dark slim-fit jeans',
+  'Clean white trainers',
+  'Clean black shoes / boots',
+  'Belt (black, simple)',
+  'Grooming kit (comb, razor, moisturiser)',
+  'Deodorant + personal hygiene essentials',
+  'Nail clippers',
+  'Phone charger',
+  'Portfolio / digitals (if requested)'
+];
+const ETIQUETTE=[
+  'Arrive at call time or earlier — never late.',
+  'Do not discuss your rate or fee with the client, other models, or anyone on set.',
+  'Be polite, professional, and positive with everyone — from runner to creative director.',
+  'Keep your phone on silent and away unless on a break.',
+  'Do not post on social media from set unless given explicit permission.',
+  'Follow the direction of the photographer and creative team.',
+  'If you are unsure about anything, speak to your booker — not the client directly.',
+  'Maintain personal hygiene and arrive camera-ready unless told otherwise.',
+  'Do not bring uninvited guests to set.',
+  'Thank the team before you leave and confirm wrap with your booker.'
+];
+
+/* ═══ PDF BUILDING ═══ */
+const stg=$('stg');
+
+function buildHeader(){
+  return`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:24px;border-bottom:1.5px solid #1a1a1a">
+    <div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:22px;font-weight:600;letter-spacing:.48em;text-transform:uppercase;color:#1a1a1a;margin-bottom:10px">TARTAN</div>
+      <div style="font-size:11px;color:#666;line-height:1.7">TARTAN MODELS LTD<br>Third Floor, 3 Hill Street, New Town<br>Edinburgh EH2 3JP<br>admin@tartanmodels.co.uk<br>07494 783 887</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#999;margin-bottom:6px">Booking Confirmation</div>
+      <div style="font-size:16px;font-weight:600;letter-spacing:.08em;color:#1a1a1a">${bookingRef}</div>
+      <div style="font-size:11px;color:#666;margin-top:8px">${fmtDate(gv('bDate'))}</div>
+      ${gv('bPO')?`<div style="font-size:11px;color:#666;margin-top:3px">PO: ${gv('bPO')}</div>`:''}
+      ${gv('bInv')?`<div style="font-size:11px;color:#666;margin-top:3px">Invoice: ${gv('bInv')}</div>`:''}
+    </div>
+  </div>`;
+}
+
+function buildSec(title,rows){
+  return`<div style="margin-bottom:22px">
+    <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px;border-bottom:1px solid #e5e5e5;padding-bottom:5px">${title}</div>
+    <table style="width:100%;border-collapse:collapse;font-size:12.5px;color:#333">
+      ${rows.map(([l,v])=>v?`<tr><td style="padding:3px 0;color:#888;width:155px;vertical-align:top">${l}</td><td style="padding:3px 0">${v}</td></tr>`:'').join('')}
+    </table>
+  </div>`;
+}
+
+function buildList(title,items){
+  return`<div style="margin-bottom:22px">
+    <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px;border-bottom:1px solid #e5e5e5;padding-bottom:5px">${title}</div>
+    <div style="font-size:11.5px;color:#444;line-height:1.8">
+      ${items.map(it=>`<div style="padding-left:14px;position:relative"><span style="position:absolute;left:0;color:#bbb">—</span>${it}</div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function buildFooter(){
+  return`<div style="margin-top:auto;border-top:1px solid #e5e5e5;padding-top:14px;font-size:9.5px;color:#999;line-height:1.7;text-align:center">
+    TARTAN MODELS LTD — Third Floor, 3 Hill Street, New Town, Edinburgh EH2 3JP<br>
+    admin@tartanmodels.co.uk — 07494 783 887<br>
+    <span style="margin-top:3px;display:inline-block">This confirmation is subject to our standard terms and conditions.</span>
+  </div>`;
+}
+
+/* ═══ CLIENT PDF ═══ */
+async function dlClientPDF(){
+  if(!validate())return;showLD('Generating client confirmation…');
+  const models=getModels(),cur=getCur(),W=794,H=1123;
+  const el=document.createElement('div');
+  el.style.cssText=`width:${W}px;min-height:${H}px;background:#fff;color:#1a1a1a;padding:48px 52px;font-family:'DM Sans',sans-serif;display:flex;flex-direction:column`;
+
+  let modelRows=models.map(m=>{const r=parseFloat(m.rate)||0,fP=parseFloat(m.fee)||0,fA=Math.round(r*(fP/100)*100)/100,tot=r+fA;
+    return`<tr><td style="padding:7px 0;border-bottom:1px solid #f0f0f0">${m.name}</td><td style="padding:7px 0;border-bottom:1px solid #f0f0f0;text-align:right">${cur}${r.toFixed(2)}</td><td style="padding:7px 0;border-bottom:1px solid #f0f0f0;text-align:right">${fP}%</td><td style="padding:7px 0;border-bottom:1px solid #f0f0f0;text-align:right">${cur}${fA.toFixed(2)}</td><td style="padding:7px 0;border-bottom:1px solid #f0f0f0;text-align:right;font-weight:600">${cur}${tot.toFixed(2)}</td></tr>`}).join('');
+  const grandTotal=models.reduce((s,m)=>{const r=parseFloat(m.rate)||0,f=parseFloat(m.fee)||0;return s+r+Math.round(r*(f/100)*100)/100},0);
+
+  el.innerHTML=`${buildHeader()}
+    ${buildSec('Client',[['Company',gv('cCompany')+(gv('cBrand')?' — '+gv('cBrand'):'')],['Contact',gv('cName')],['Email',gv('cEmail')],['Phone',gv('cPhone')],['Address',gv('cAddr')]])}
+    ${buildSec('Job Details',[['Type',gv('bType')],['Job Date',fmtDate(gv('jDate'))+(gv('jExtraDates')?' + '+gv('jExtraDates'):'')],['Call Time',fmtTime(gv('jCall'))],['Start Time',fmtTime(gv('jStart'))],['Est. Wrap',fmtTime(gv('jWrap'))],['Overtime',gv('jOT')]])}
+    ${buildSec('Location',[['Venue',gv('lVenue')],['Address',gv('lAddr')],['Travel',gv('lTravel')],['On-Set Contact',gv('lContact')]])}
+    ${buildSec('Usage & Terms',[['Usage',gv('bUsage')],['Territory',gv('bTerritory')],['Duration',gv('bDuration')],['Payment Terms',gv('bPayTerms')],['Cancellation',gv('xCancel')]])}
+    <div style="margin-bottom:22px">
+      <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px;border-bottom:1px solid #e5e5e5;padding-bottom:5px">Fees</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;color:#333">
+        <thead><tr style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#999"><th style="text-align:left;padding:5px 0;border-bottom:1px solid #e5e5e5">Model</th><th style="text-align:right;padding:5px 0;border-bottom:1px solid #e5e5e5">Day Rate</th><th style="text-align:right;padding:5px 0;border-bottom:1px solid #e5e5e5">Agency Fee</th><th style="text-align:right;padding:5px 0;border-bottom:1px solid #e5e5e5">Fee Amt</th><th style="text-align:right;padding:5px 0;border-bottom:1px solid #e5e5e5">Total</th></tr></thead>
+        <tbody>${modelRows}</tbody>
+        <tfoot><tr><td colspan="4" style="padding:10px 0;text-align:right;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#666">Grand Total</td><td style="padding:10px 0;text-align:right;font-size:15px;font-weight:600;color:#1a1a1a">${cur}${grandTotal.toFixed(2)}</td></tr></tfoot>
+      </table>
+    </div>
+    ${gv('xNotes')?buildSec('Notes',[['',gv('xNotes')]]):''}
+    ${buildFooter()}`;
+
+  stg.appendChild(el);
+  try{const c=await html2canvas(el,{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#FFFFFF',logging:false});const{jsPDF}=window.jspdf;const pdfW=210,pdfH=c.height/(c.width/210);const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:[pdfW,pdfH]});pdf.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,pdfW,pdfH);pdf.save(`${bookingRef}_Client_Confirmation.pdf`)}catch(e){console.error(e);toast('PDF generation failed')}
+  stg.removeChild(el);hideLD();
+}
+
+/* ═══ MODEL PDF(S) ═══ */
+async function dlModelPDFs(){
+  if(!validate())return;const models=getModels();showLD('Generating model confirmation(s)…');
+  const W=794,H=1123,cur=getCur();
+
+  for(const m of models){
+    const rate=parseFloat(m.rate)||0,fP=parseFloat(m.fee)||0,fA=Math.round(rate*(fP/100)*100)/100;
+    const kit=m.gender==='Male'?KIT_MALE:KIT_FEMALE;
+    const kitTitle=m.gender==='Male'?'What to Bring — Male Model Kit':'What to Bring — Female Model Kit';
+
+    const el=document.createElement('div');
+    el.style.cssText=`width:${W}px;min-height:${H}px;background:#fff;color:#1a1a1a;padding:48px 52px;font-family:'DM Sans',sans-serif;display:flex;flex-direction:column`;
+    el.innerHTML=`${buildHeader()}
+      <div style="margin-bottom:24px;text-align:center">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;letter-spacing:.04em;color:#1a1a1a">${m.name}</div>
+        <div style="font-size:11px;color:#999;letter-spacing:.08em;text-transform:uppercase;margin-top:4px">Model Booking Confirmation</div>
+      </div>
+      ${buildSec('Job Details',[['Client',gv('cCompany')+(gv('cBrand')?' — '+gv('cBrand'):'')],['Job Type',gv('bType')],['Job Date',fmtDate(gv('jDate'))+(gv('jExtraDates')?' + '+gv('jExtraDates'):'')],['Call Time',fmtTime(gv('jCall'))],['Start Time',fmtTime(gv('jStart'))],['Est. Wrap',fmtTime(gv('jWrap'))],['Overtime',gv('jOT')]])}
+      ${buildSec('Location',[['Venue',gv('lVenue')],['Address',gv('lAddr')],['Travel',gv('lTravel')],['On-Set Contact',gv('lContact')]])}
+      ${buildSec('Usage',[['Usage',gv('bUsage')],['Territory',gv('bTerritory')],['Duration',gv('bDuration')]])}
+      ${buildSec('Fee',[['Day Rate',cur+rate.toFixed(2)],['Agency Fee ('+fP+'%)',cur+fA.toFixed(2)],['Travel / Expenses',m.travel||'—']])}
+      ${m.notes?buildSec('Notes for You',[['',m.notes]]):''}
+      ${gv('xNotes')?buildSec('Additional Notes',[['',gv('xNotes')]]):''}
+      ${buildList(kitTitle,kit)}
+      ${buildList('On-Set Etiquette',ETIQUETTE)}
+      ${buildSec('Terms',[['Payment',gv('bPayTerms')],['Cancellation',gv('xCancel')]])}
+      ${buildFooter()}`;
+
+    stg.appendChild(el);
+    try{const c=await html2canvas(el,{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#FFFFFF',logging:false});const{jsPDF}=window.jspdf;const pdfW=210,pdfH=c.height/(c.width/210);const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:[pdfW,pdfH]});pdf.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,pdfW,pdfH);pdf.save(`${bookingRef}_${m.name.replace(/\s/g,'_')}_Confirmation.pdf`)}catch(e){console.error(e);toast('PDF failed for '+m.name)}
+    stg.removeChild(el);await new Promise(r=>setTimeout(r,500));
+  }
+  hideLD();
+}
+</script>
+</body>
+</html>
